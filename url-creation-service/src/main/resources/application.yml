@@ -1,0 +1,28 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: url-creation-service
+  cassandra:
+    contact-points: localhost:9042
+    local-datacenter: datacenter1
+    keyspace-name: shortener
+    schema-action: none
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 50ms
+shortener:
+  base-url: http://localhost:8080
+  kgs:
+    base-url: http://localhost:8081
+  blocked-domains: evil.example,malware.test
+  rate-limit:
+    anonymous: { burst: 10, per-minute: 10 }
+    user: { burst: 20, per-hour: 100 }
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

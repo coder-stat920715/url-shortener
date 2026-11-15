@@ -1,0 +1,35 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: analytics-ingestion-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      type: batch
+      concurrency: 6                # keep <= partition count
+      ack-mode: batch
+    consumer:
+      group-id: analytics-ingestion
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      max-poll-records: 5000
+      fetch-min-size: 1048576
+      fetch-max-wait: 500ms
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.value.default.type: com.shortener.common.ClickEventDTO
+        spring.json.trusted.packages: com.shortener.common
+        spring.json.use.type.headers: false
+analytics:
+  clickhouse:
+    url: http://localhost:8123
+    database: default
+  ip-hash-salt: ${IP_HASH_SALT:change-me}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

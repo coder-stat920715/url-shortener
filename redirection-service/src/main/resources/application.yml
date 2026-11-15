@@ -1,0 +1,42 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: redirection-service
+  cassandra:
+    contact-points: localhost:9042
+    local-datacenter: datacenter1
+    keyspace-name: shortener
+    schema-action: none
+    request:
+      timeout: 50ms
+      consistency: local-one
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 20ms
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: "1"
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      compression-type: lz4
+      batch-size: 65536
+      buffer-memory: 67108864
+      properties:
+        linger.ms: 20
+        max.block.ms: 0
+        delivery.timeout.ms: 10000
+        spring.json.add.type.headers: false
+shortener:
+  cache:
+    l1:
+      max-size: 50000
+      ttl-seconds: 45
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

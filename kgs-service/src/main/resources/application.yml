@@ -1,0 +1,15 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: kgs-service
+kgs:
+  zookeeper:
+    connect: localhost:2181
+  range-size: 1000000
+  scrambler-seed: ${KGS_SCRAMBLER_SEED:918273645123}   # keep in a secret manager in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
